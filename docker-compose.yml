@@ -1,0 +1,63 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: unleash_db
+    restart: unless-stopped
+    networks:
+      - unleash
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  unleash:
+    image: unleashorg/unleash-server:latest
+    container_name: unleash_app
+    networks:
+      - unleash
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    ports:
+      - "${UNLEASH_PORT}:4242"
+    environment:
+      # DB
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_SSL: ${DATABASE_SSL}
+      DATABASE_SSL_REJECT_UNAUTHORIZED: ${DATABASE_SSL_REJECT_UNAUTHORIZED}
+
+      # Instance metadata
+      UNLEASH_INSTANCE_ID: ${UNLEASH_INSTANCE_ID}
+      LOG_LEVEL: ${LOG_LEVEL}
+
+      # (Opcional) SMTP para notificaciones (deja comentado si no lo usas)
+      # EMAIL_HOST: ${EMAIL_HOST}
+      # EMAIL_PORT: ${EMAIL_PORT}
+      # EMAIL_USER: ${EMAIL_USER}
+      # EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      # EMAIL_FROM: ${EMAIL_FROM}
+      # EMAIL_SECURE: ${EMAIL_SECURE} # "true" / "false"
+
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4242/health').then(r=>{if(r.ok)process.exit(0);else process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+
+networks:
+  unleash:
+    driver: bridge
+
+volumes:
+  db_data:
