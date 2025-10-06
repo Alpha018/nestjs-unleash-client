@@ -1,98 +1,168 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS Unleash Client
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<div align="center">
+  <a href="http://nestjs.com/" target="_blank">
+    <img src="https://nestjs.com/img/logo_text.svg" width="150" alt="Nest Logo" />
+  </a>
+</div>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<h3 align="center">A NestJS module for Unleash, providing feature flagging with a global Guard and decorators.</h3>
 
-## Description
+<div align="center">
+  <a href="https://nestjs.com" target="_blank">
+    <img src="https://img.shields.io/badge/built%20with-NestJs-red.svg" alt="Built with NestJS">
+  </a>
+</div>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Import the Module](#import-the-module)
+  - [Parameter Options](#parameter-options)
+  - [Protecting a Route with a Feature Toggle](#protecting-a-route-with-a-feature-toggle)
+  - [Injecting the Unleash Client](#injecting-the-unleash-client)
+- [Resources](#resources)
+- [Stay in touch](#stay-in-touch)
+- [License](#license)
 
-## Project setup
+> **⚠️ Important:** Starting from this version, the minimum required Node.js version is **20**.
 
+## Installation
 ```bash
-$ npm install
+$ npm i @alpha018/nestjs-unleash-client
 ```
 
-## Compile and run the project
+## Usage
 
-```bash
-# development
-$ npm run start
+### Import The Module
+To use the Unleash client in your application, import the module into your main module. The module registers a global guard that will automatically protect routes decorated with `@UnleashToggle`.
 
-# watch mode
-$ npm run start:dev
+#### Static Registration
+```ts
+import { UnleashClientModule } from '@alpha018/nestjs-unleash-client';
 
-# production mode
-$ npm run start:prod
+@Module({
+  imports: [
+    // ...
+    UnleashClientModule.forRoot({
+      config: {
+        url: 'http://unleash.herokuapp.com/api/',
+        appName: 'my-nestjs-app',
+      },
+      global: true, // Make the module and its providers global
+    }),
+    // ...
+  ],
+})
+export class AppModule {}
 ```
 
-## Run tests
+#### Async Registration
+```ts
+import { UnleashClientModule } from '@alpha018/nestjs-unleash-client';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+@Module({
+  imports: [
+    // ...
+    UnleashClientModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        config: {
+          url: configService.get('UNLEASH_URL'),
+          appName: configService.get('UNLEASH_APP_NAME'),
+          customHeaders: { Authorization: configService.get('UNLEASH_API_TOKEN') },
+        }
+      }),
+      inject: [ConfigService],
+      isGlobal: true, // Make the module and its providers global
+    }),
+    // ...
+  ],
+})
+export class AppModule {}
 ```
 
-## Deployment
+## Parameter Options
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Options for `forRoot`:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+| Parameter | Type              | Required | Description                                                                    |
+|-----------|-------------------|----------|--------------------------------------------------------------------------------|
+| `config`  | `UnleashConfig`   | Yes      | The configuration object for the `unleash-client`. See options below.          |
+| `global`  | `boolean`         | No       | If `true`, the module will be registered as a global module. Defaults to `false`. |
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+The `config` object is passed directly to the `unleash-client`. The most common options are:
+
+| `config` Parameter | Type     | Required | Description                                                                                                |
+|--------------------|----------|----------|------------------------------------------------------------------------------------------------------------|
+| `url`              | `string` | Yes      | The URL of your Unleash server API.                                                                        |
+| `appName`          | `string` | Yes      | The name of your application.                                                                              |
+| `customHeaders`    | `object` | No       | Custom headers to be sent to the Unleash API. Use `Authorization` for the API key generated by the Unleash panel. |
+| `...`              | `any`    | No       | Any other valid option from the [official unleash-client-node documentation](https://docs.getunleash.io/reference/sdks/node). |
+
+For `forRootAsync`, `isGlobal` is used instead of `global`.
+
+### Protecting a Route with a Feature Toggle
+To protect an endpoint with a feature toggle, use the `@UnleashToggle` decorator. The global `UnleashGuard` will automatically deny access if the feature is disabled.
+
+```ts
+import { Controller, Get } from '@nestjs/common';
+import { UnleashToggle } from '@alpha018/nestjs-unleash-client';
+
+@Controller()
+export class AppController {
+  @Get('hello')
+  @UnleashToggle('my-feature-toggle')
+  getHello(): string {
+    // This route is only accessible if 'my-feature-toggle' is enabled in Unleash
+    return 'Hello World!';
+  }
+
+  @Get('unprotected')
+  getUnprotectedHello(): string {
+    // This route is always accessible as it does not have the @UnleashToggle decorator
+    return 'This is an unprotected route.';
+  }
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Injecting the Unleash Client
+If you need to check a feature toggle directly in your code, you can inject the `UnleashClientProvider`.
+
+```ts
+import { Controller, Get } from '@nestjs/common';
+import { UnleashClientProvider } from '@alpha018/nestjs-unleash-client';
+
+@Controller()
+export class AppController {
+  constructor(private readonly unleashProvider: UnleashClientProvider) {}
+
+  @Get('check')
+  checkFeature() {
+    if (this.unleashProvider.isEnabled('my-other-feature')) {
+      // Logic for when the feature is enabled
+      return 'Feature is enabled!';
+    } else {
+      // Logic for when the feature is disabled
+      return 'Feature is disabled!';
+    }
+  }
+}
+```
 
 ## Resources
 
 Check out a few resources that may come in handy when working with NestJS:
 
 - Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
 - Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Tomás Alegre](https://github.com/Alpha018)
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is [MIT licensed](LICENSE).
