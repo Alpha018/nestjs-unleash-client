@@ -11,11 +11,6 @@ jobs:
     strategy:
       matrix:
         node-version: [ 20.x, 22.x ]
-    env:
-      FIREBASE_TEST_USER: ${{ secrets.FIREBASE_TEST_USER }}
-      FIREBASE_TEST_USER_LOCAL: ${{ secrets.FIREBASE_TEST_USER_LOCAL }}
-      FIREBASE_SERVICE_ACCOUNT_BASE64: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BASE64 }}
-      FIREBASE_CLIENT_BASE64: ${{ secrets.FIREBASE_CLIENT_BASE64 }}
 
     steps:
       - name: Checkout code

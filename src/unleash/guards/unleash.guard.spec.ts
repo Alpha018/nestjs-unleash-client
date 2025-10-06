@@ -3,7 +3,7 @@ import { ExecutionContext } from '@nestjs/common';
 import { createMock } from '@golevelup/ts-jest';
 import { Reflector } from '@nestjs/core';
 
-import { UnexpectedUnleashException } from '../error-handler/exceptions/provider/atg.exceptions';
+import { UnexpectedUnleashException } from '../error-handler/exceptions/provider/unleash.exceptions';
 import { UnleashClientProvider } from '../provider/unleash-client.provider';
 import { UNLEASH_TOGGLE_KEY } from '../decorators/unleash.decorator';
 import { UnleashGuard } from './unleash.guard';
