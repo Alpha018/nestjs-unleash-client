@@ -1,9 +1,4 @@
-import {
-  OnModuleDestroy,
-  OnModuleInit,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { OnModuleDestroy, OnModuleInit, Injectable, Logger } from '@nestjs/common';
 import { UnleashConfig, Unleash, Context } from 'unleash-client';
 
 @Injectable()

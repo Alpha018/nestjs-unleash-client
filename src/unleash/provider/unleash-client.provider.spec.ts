@@ -49,10 +49,7 @@ describe('UnleashClientProvider', () => {
   });
 
   it('should register error and warn listeners', () => {
-    expect(unleashClient.on).toHaveBeenCalledWith(
-      'error',
-      expect.any(Function),
-    );
+    expect(unleashClient.on).toHaveBeenCalledWith('error', expect.any(Function));
     expect(unleashClient.on).toHaveBeenCalledWith('warn', expect.any(Function));
   });
 
@@ -60,9 +57,7 @@ describe('UnleashClientProvider', () => {
     const error = new Error('test error');
     const errorCallback = jest
       .mocked(unleashClient.on)
-      .mock.calls.find((call) => call[0] === 'error')![1] as (
-      err: Error,
-    ) => void;
+      .mock.calls.find((call) => call[0] === 'error')![1] as (err: Error) => void;
 
     errorCallback(error);
 
@@ -73,9 +68,7 @@ describe('UnleashClientProvider', () => {
     const message = 'test warning';
     const warnCallback = jest
       .mocked(unleashClient.on)
-      .mock.calls.find((call) => call[0] === 'warn')![1] as (
-      msg: string,
-    ) => void;
+      .mock.calls.find((call) => call[0] === 'warn')![1] as (msg: string) => void;
 
     warnCallback(message);
 
@@ -85,9 +78,7 @@ describe('UnleashClientProvider', () => {
   it('should call getFeatureToggleDefinition on unleash client', () => {
     const toggleName = 'test-toggle';
     provider.getFeatureToggleDefinition(toggleName);
-    expect(unleashClient.getFeatureToggleDefinition).toHaveBeenCalledWith(
-      toggleName,
-    );
+    expect(unleashClient.getFeatureToggleDefinition).toHaveBeenCalledWith(toggleName);
   });
 
   it('should call isEnabled on unleash client', () => {

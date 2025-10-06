@@ -34,9 +34,7 @@ describe('UnleashGuard', () => {
 
     guard = module.get<UnleashGuard>(UnleashGuard);
     reflector = module.get<Reflector>(Reflector);
-    unleashClientProvider = module.get<UnleashClientProvider>(
-      UnleashClientProvider,
-    );
+    unleashClientProvider = module.get<UnleashClientProvider>(UnleashClientProvider);
   });
 
   it('should be defined', () => {
@@ -56,10 +54,7 @@ describe('UnleashGuard', () => {
     jest.spyOn(unleashClientProvider, 'isEnabled').mockReturnValue(true);
 
     expect(guard.canActivate(context)).toBe(true);
-    expect(reflector.get).toHaveBeenCalledWith(
-      UNLEASH_TOGGLE_KEY,
-      context.getHandler(),
-    );
+    expect(reflector.get).toHaveBeenCalledWith(UNLEASH_TOGGLE_KEY, context.getHandler());
     expect(unleashClientProvider.isEnabled).toHaveBeenCalledWith('test-toggle');
   });
 
@@ -78,8 +73,6 @@ describe('UnleashGuard', () => {
       throw new Error();
     });
 
-    expect(() => guard.canActivate(context)).toThrow(
-      UnexpectedUnleashException,
-    );
+    expect(() => guard.canActivate(context)).toThrow(UnexpectedUnleashException);
   });
 });

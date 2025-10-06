@@ -1,10 +1,7 @@
 import { FactoryProvider, DynamicModule, Module } from '@nestjs/common';
 import { APP_GUARD, Reflector } from '@nestjs/core';
 
-import {
-  UNLEASH_CLIENT_MODULE_OPTIONS,
-  UNLEASH_CLIENT_CONFIG,
-} from './constant/unleash.constant';
+import { UNLEASH_CLIENT_MODULE_OPTIONS, UNLEASH_CLIENT_CONFIG } from './constant/unleash.constant';
 import { UnleashClientConstructorInterface } from './interface/unleash-client-constructor.interface';
 import { UnleashClientModuleAsyncOptions } from './interface/unleash-client.interface';
 import { UnleashClientProvider } from './provider/unleash-client.provider';
@@ -42,12 +39,7 @@ export class UnleashClientModule {
         UnleashGuard,
         reflectorProvider,
       ],
-      exports: [
-        UnleashClientProvider,
-        UNLEASH_CLIENT_CONFIG,
-        UnleashGuard,
-        reflectorProvider,
-      ],
+      exports: [UnleashClientProvider, UNLEASH_CLIENT_CONFIG, UnleashGuard, reflectorProvider],
       imports: options.imports || [],
       module: UnleashClientModule,
       global: options.isGlobal,
@@ -78,20 +70,13 @@ export class UnleashClientModule {
         UnleashGuard,
         reflectorProvider,
       ],
-      exports: [
-        UnleashClientProvider,
-        UNLEASH_CLIENT_CONFIG,
-        UnleashGuard,
-        reflectorProvider,
-      ],
+      exports: [UnleashClientProvider, UNLEASH_CLIENT_CONFIG, UnleashGuard, reflectorProvider],
       module: UnleashClientModule,
       global: global,
     };
   }
 
-  private static createAsyncProviders(
-    options: UnleashClientModuleAsyncOptions,
-  ): any[] {
+  private static createAsyncProviders(options: UnleashClientModuleAsyncOptions): any[] {
     if (options.useFactory) {
       return [
         {

@@ -13,10 +13,7 @@ export class UnleashGuard implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const toggleName = this.reflector.get<string>(
-      UNLEASH_TOGGLE_KEY,
-      context.getHandler(),
-    );
+    const toggleName = this.reflector.get<string>(UNLEASH_TOGGLE_KEY, context.getHandler());
 
     if (!toggleName) {
       return true;
