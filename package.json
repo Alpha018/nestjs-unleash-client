@@ -1,10 +1,18 @@
 {
-  "name": "unleash-lib",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
-  "license": "UNLICENSED",
+  "name": "@alpha018/nestjs-unleash-client",
+  "version": "2.0.0",
+  "description": "A NestJS module for Unleash, providing feature flagging with decorators and a Guard.",
+  "author": "Tomás Alegre <tomas.sa467@gmail.com>",
+  "readmeFilename": "README.md",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist/**/*",
+    "*.md"
+  ],
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -25,12 +33,14 @@
     "@nestjs/core": "^11.1.6",
     "@nestjs/platform-express": "^11.1.6",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "unleash-client": "^6.7.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.37.0",
+    "@golevelup/ts-jest": "^0.7.0",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/schematics": "^11.0.8",
     "@nestjs/testing": "^11.1.6",
@@ -67,6 +77,26 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.45.0"
   },
+  "keywords": [
+    "nestjs",
+    "unleash",
+    "unleash-client",
+    "unleash-api",
+    "guard",
+    "feature-flag",
+    "feature"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alpha018/nestjs-unleash-client"
+  },
+  "bugs": {
+    "url": "https://github.com/Alpha018/nestjs-unleash-client/issues"
+  },
+  "homepage": "https://github.com/Alpha018/nestjs-unleash-client#readme",
   "jest": {
     "moduleFileExtensions": [
       "js",
