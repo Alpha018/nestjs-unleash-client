@@ -1,7 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
 
 import { UnexpectedUnleashException, NotFoundUnleashException } from './unleash.exceptions';
-import { UnleashErrorCode } from '../code/unleash.code';
+import { UnleashErrorCode } from '../code';
 
 describe('Unleash Exceptions', () => {
   describe('UnexpectedUnleashException', () => {

@@ -1,5 +1,6 @@
 import { OnModuleDestroy, OnModuleInit, Injectable, Logger } from '@nestjs/common';
 import { UnleashConfig, Unleash, Context } from 'unleash-client';
+import { FeatureInterface } from 'unleash-client/lib/feature';
 
 @Injectable()
 export class UnleashClientProvider implements OnModuleDestroy, OnModuleInit {
@@ -37,7 +38,7 @@ export class UnleashClientProvider implements OnModuleDestroy, OnModuleInit {
    * @param {string} toggleName - The name of the feature toggle to retrieve.
    * @returns {any} - The feature toggle definition.
    */
-  getFeatureToggleDefinition(toggleName: string) {
+  getFeatureToggleDefinition(toggleName: string): FeatureInterface | undefined {
     return this._unleashClient.getFeatureToggleDefinition(toggleName);
   }
 
