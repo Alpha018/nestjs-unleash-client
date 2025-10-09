@@ -1,9 +1,10 @@
 import { ExecutionContext, CanActivate, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { Context } from 'unleash-client';
 
-import { UnexpectedUnleashException } from '../error-handler/exceptions/provider/unleash.exceptions';
+import { UNLEASH_TOGGLE_CONTEXT, UNLEASH_TOGGLE_KEY } from '../decorators/unleash.decorator';
 import { UnleashClientProvider } from '../provider/unleash-client.provider';
-import { UNLEASH_TOGGLE_KEY } from '../decorators/unleash.decorator';
+import { UnexpectedUnleashException } from '../../error/exceptions';
 
 @Injectable()
 export class UnleashGuard implements CanActivate {
@@ -26,18 +27,19 @@ export class UnleashGuard implements CanActivate {
    */
   canActivate(context: ExecutionContext): boolean {
     const toggleName = this.reflector.get<string>(UNLEASH_TOGGLE_KEY, context.getHandler());
+    const toggleContext: undefined | Context = this.reflector.get<Context>(
+      UNLEASH_TOGGLE_CONTEXT,
+      context.getHandler(),
+    );
 
-    if (!toggleName) {
-      return true;
-    }
+    let enableFeature: boolean;
 
-    let data: boolean;
     try {
-      data = this.unleashClientProvider.isEnabled(toggleName);
+      enableFeature = this.unleashClientProvider.isEnabled(toggleName, toggleContext);
     } catch {
       throw new UnexpectedUnleashException();
     }
 
-    return data;
+    return enableFeature;
   }
 }

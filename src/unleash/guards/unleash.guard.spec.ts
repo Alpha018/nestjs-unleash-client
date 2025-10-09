@@ -3,9 +3,9 @@ import { ExecutionContext } from '@nestjs/common';
 import { createMock } from '@golevelup/ts-jest';
 import { Reflector } from '@nestjs/core';
 
-import { UnexpectedUnleashException } from '../error-handler/exceptions/provider/unleash.exceptions';
 import { UnleashClientProvider } from '../provider/unleash-client.provider';
 import { UNLEASH_TOGGLE_KEY } from '../decorators/unleash.decorator';
+import { UnexpectedUnleashException } from '../../error/exceptions';
 import { UnleashGuard } from './unleash.guard';
 
 describe('UnleashGuard', () => {
@@ -41,13 +41,6 @@ describe('UnleashGuard', () => {
     expect(guard).toBeDefined();
   });
 
-  it('should return true when no toggle is required', () => {
-    const context = createMock<ExecutionContext>();
-    jest.spyOn(reflector, 'get').mockReturnValue(undefined);
-
-    expect(guard.canActivate(context)).toBe(true);
-  });
-
   it('should return true when toggle is enabled', () => {
     const context = createMock<ExecutionContext>();
     jest.spyOn(reflector, 'get').mockReturnValue('test-toggle');
@@ -55,7 +48,7 @@ describe('UnleashGuard', () => {
 
     expect(guard.canActivate(context)).toBe(true);
     expect(reflector.get).toHaveBeenCalledWith(UNLEASH_TOGGLE_KEY, context.getHandler());
-    expect(unleashClientProvider.isEnabled).toHaveBeenCalledWith('test-toggle');
+    expect(unleashClientProvider.isEnabled).toHaveBeenCalledWith('test-toggle', 'test-toggle');
   });
 
   it('should return false when toggle is disabled', () => {
