@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/Alpha018/nestjs-unleash-client/compare/v1.0.1...v1.0.2) (2025-11-28)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies and devDependencies ([b55e1dc](https://github.com/Alpha018/nestjs-unleash-client/commit/b55e1dc8ec8773d7900a415b66c0e65e35a540ea))
+
 ## [1.0.1](https://github.com/Alpha018/nestjs-unleash-client/compare/v1.0.0...v1.0.1) (2025-10-10)
 
 
