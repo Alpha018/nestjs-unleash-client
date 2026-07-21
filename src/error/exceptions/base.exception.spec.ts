@@ -19,8 +19,10 @@ describe('BaseException', () => {
       throw new TestException();
     } catch (error) {
       expect(error).toBeInstanceOf(TestException);
-      expect(error.getStatus()).toBe(HttpStatus.BAD_REQUEST);
-      expect(error.getResponse()).toEqual({
+      const exception = error as BaseException;
+
+      expect(exception.getStatus()).toBe(HttpStatus.BAD_REQUEST);
+      expect(exception.getResponse()).toEqual({
         message: 'This is a test exception',
         options: undefined,
         code: 'TEST_CODE',
@@ -33,8 +35,10 @@ describe('BaseException', () => {
       throw new AnotherTestException();
     } catch (error) {
       expect(error).toBeInstanceOf(AnotherTestException);
-      expect(error.getStatus()).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
-      expect(error.getResponse()).toEqual({
+      const exception = error as BaseException;
+
+      expect(exception.getStatus()).toBe(HttpStatus.INTERNAL_SERVER_ERROR);
+      expect(exception.getResponse()).toEqual({
         message: 'Another test exception',
         code: 'ANOTHER_TEST_CODE',
         options: undefined,
@@ -48,8 +52,10 @@ describe('BaseException', () => {
       throw new TestException(options);
     } catch (error) {
       expect(error).toBeInstanceOf(TestException);
-      expect(error.getStatus()).toBe(HttpStatus.BAD_REQUEST);
-      expect(error.getResponse()).toEqual({
+      const exception = error as BaseException;
+
+      expect(exception.getStatus()).toBe(HttpStatus.BAD_REQUEST);
+      expect(exception.getResponse()).toEqual({
         message: 'This is a test exception',
         code: 'TEST_CODE',
         options: options,
