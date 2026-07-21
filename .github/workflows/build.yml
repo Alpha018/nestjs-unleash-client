@@ -14,12 +14,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.TOKEN_GITHUB }}
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -38,14 +38,14 @@ jobs:
       - test
     steps:
       - name: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.TOKEN_GITHUB }}
           persist-credentials: true
           fetch-depth: 0
 
       - name: environment
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           cache: npm
           node-version: 24
