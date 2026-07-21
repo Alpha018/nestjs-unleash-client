@@ -9,7 +9,7 @@ export class UnleashClientProvider implements OnModuleDestroy, OnModuleInit {
   }
 
   private readonly logger = new Logger(UnleashClientProvider.name);
-  private _unleashClient: Unleash;
+  private _unleashClient!: Unleash;
 
   /**
    * Initializes a new instance of the UnleashClientProvider class.
